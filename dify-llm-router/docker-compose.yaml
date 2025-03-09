@@ -1,0 +1,276 @@
+version: '3'
+
+networks:
+  dify-network:
+    driver: bridge
+  llm-router-network:
+    driver: bridge
+
+services:
+  # LLM Router services
+  router-server:
+    build:
+      context: ../llm-router
+      dockerfile: src/router-server/router-server.dockerfile
+    image: router-server:latest
+    shm_size: 8G
+    ulimits:
+      memlock: -1
+      stack: 67108864
+    volumes:
+      - ../llm-router/routers/:/model_repository
+    command: tritonserver --log-verbose=1 --model-repository=/model_repository
+    ports:
+      - "8010:8000"
+      - "8011:8001"
+      - "8012:8002"
+    networks:
+      - llm-router-network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: [ "0" ]
+              capabilities: [ gpu ]
+
+  router-controller:
+    build:
+      context: ../llm-router
+      dockerfile: src/router-controller/router-controller.dockerfile
+    image: router-controller:latest
+    ports:
+      - "8084:8084"
+    networks:
+      - llm-router-network
+      - dify-network
+    volumes:
+      - ./llm-router-config.yaml:/app/config.yaml
+
+  # Dify services
+  api:
+    image: langgenius/dify-api:1.0.0
+    restart: always
+    environment:
+      # Core settings
+      CONSOLE_API_URL: 
+      CONSOLE_WEB_URL: 
+      SERVICE_API_URL: 
+      APP_API_URL: 
+      APP_WEB_URL:
+      FILES_URL:
+      
+      # Logging
+      LOG_LEVEL: INFO
+      LOG_FILE: /app/logs/server.log
+      LOG_FILE_MAX_SIZE: 20
+      LOG_FILE_BACKUP_COUNT: 5
+      LOG_DATEFORMAT: "%Y-%m-%d %H:%M:%S"
+      LOG_TZ: UTC
+      
+      # Debug settings
+      DEBUG: false
+      FLASK_DEBUG: false
+      
+      # Security settings
+      SECRET_KEY: sk-9f73s3ljTXVcMT3Blb3ljTqtsKiGHXVcMT3BlbkFJLK7U
+      INIT_PASSWORD: password
+      DEPLOY_ENV: PRODUCTION
+      
+      # Database config
+      DB_USERNAME: postgres
+      DB_PASSWORD: difyai123456
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: dify
+      SQLALCHEMY_POOL_SIZE: 30
+      SQLALCHEMY_POOL_RECYCLE: 3600
+      SQLALCHEMY_ECHO: false
+      
+      # Redis config
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_USERNAME: 
+      REDIS_PASSWORD: difyai123456
+      REDIS_USE_SSL: false
+      REDIS_DB: 0
+      
+      # Celery settings
+      CELERY_BROKER_URL: redis://:difyai123456@redis:6379/1
+      
+      # Server settings
+      MODE: api
+      DIFY_BIND_ADDRESS: 0.0.0.0
+      DIFY_PORT: 5001
+      SERVER_WORKER_AMOUNT: 1
+      SERVER_WORKER_CLASS: gevent
+      
+      # Vector store settings
+      VECTOR_STORE: weaviate
+      WEAVIATE_ENDPOINT: http://weaviate:8080
+      WEAVIATE_API_KEY: WVF5YThaHlkYwhGUSmCRgsX3tD5ngdN8pkih
+      
+      # Storage settings
+      STORAGE_TYPE: opendal
+      OPENDAL_SCHEME: fs
+      OPENDAL_FS_ROOT: storage
+      
+      # Migration settings
+      MIGRATION_ENABLED: true
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./volumes/app/storage:/app/api/storage
+    networks:
+      - dify-network
+
+  worker:
+    image: langgenius/dify-api:1.0.0
+    restart: always
+    environment:
+      # Core settings
+      CONSOLE_API_URL: 
+      CONSOLE_WEB_URL: 
+      SERVICE_API_URL: 
+      APP_API_URL: 
+      APP_WEB_URL:
+      FILES_URL:
+      
+      # Logging
+      LOG_LEVEL: INFO
+      LOG_FILE: /app/logs/server.log
+      LOG_FILE_MAX_SIZE: 20
+      LOG_FILE_BACKUP_COUNT: 5
+      LOG_DATEFORMAT: "%Y-%m-%d %H:%M:%S"
+      LOG_TZ: UTC
+      
+      # Debug settings
+      DEBUG: false
+      FLASK_DEBUG: false
+      
+      # Security settings
+      SECRET_KEY: sk-9f73s3ljTXVcMT3Blb3ljTqtsKiGHXVcMT3BlbkFJLK7U
+      INIT_PASSWORD: password
+      DEPLOY_ENV: PRODUCTION
+      
+      # Database config
+      DB_USERNAME: postgres
+      DB_PASSWORD: difyai123456
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: dify
+      SQLALCHEMY_POOL_SIZE: 30
+      SQLALCHEMY_POOL_RECYCLE: 3600
+      SQLALCHEMY_ECHO: false
+      
+      # Redis config
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_USERNAME: 
+      REDIS_PASSWORD: difyai123456
+      REDIS_USE_SSL: false
+      REDIS_DB: 0
+      
+      # Celery settings
+      CELERY_BROKER_URL: redis://:difyai123456@redis:6379/1
+      
+      # Server settings
+      MODE: worker
+      
+      # Vector store settings
+      VECTOR_STORE: weaviate
+      WEAVIATE_ENDPOINT: http://weaviate:8080
+      WEAVIATE_API_KEY: WVF5YThaHlkYwhGUSmCRgsX3tD5ngdN8pkih
+      
+      # Storage settings
+      STORAGE_TYPE: opendal
+      OPENDAL_SCHEME: fs
+      OPENDAL_FS_ROOT: storage
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./volumes/app/storage:/app/api/storage
+    networks:
+      - dify-network
+
+  web:
+    image: langgenius/dify-web:1.0.0
+    restart: always
+    environment:
+      CONSOLE_API_URL: http://api:5001
+      APP_API_URL: http://api:5001
+      TEXT_GENERATION_TIMEOUT_MS: 60000
+    networks:
+      - dify-network
+
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      PGUSER: postgres
+      POSTGRES_PASSWORD: difyai123456
+      POSTGRES_DB: dify
+      PGDATA: /var/lib/postgresql/data/pgdata
+    command: >
+      postgres -c 'max_connections=100'
+               -c 'shared_buffers=128MB'
+               -c 'work_mem=4MB'
+               -c 'maintenance_work_mem=64MB'
+               -c 'effective_cache_size=4096MB'
+    volumes:
+      - ./volumes/db/data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ 'CMD', 'pg_isready' ]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    networks:
+      - dify-network
+
+  redis:
+    image: redis:6-alpine
+    restart: always
+    environment:
+      REDISCLI_AUTH: difyai123456
+    volumes:
+      - ./volumes/redis/data:/data
+    command: redis-server --requirepass difyai123456
+    healthcheck:
+      test: [ 'CMD', 'redis-cli', 'ping' ]
+    networks:
+      - dify-network
+
+  weaviate:
+    image: semitechnologies/weaviate:1.19.0
+    restart: always
+    volumes:
+      - ./volumes/weaviate:/var/lib/weaviate
+    environment:
+      PERSISTENCE_DATA_PATH: /var/lib/weaviate
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: false
+      DEFAULT_VECTORIZER_MODULE: none
+      CLUSTER_HOSTNAME: node1
+      AUTHENTICATION_APIKEY_ENABLED: true
+      AUTHENTICATION_APIKEY_ALLOWED_KEYS: WVF5YThaHlkYwhGUSmCRgsX3tD5ngdN8pkih
+      AUTHENTICATION_APIKEY_USERS: hello@dify.ai
+      AUTHORIZATION_ADMINLIST_ENABLED: true
+      AUTHORIZATION_ADMINLIST_USERS: hello@dify.ai
+    networks:
+      - dify-network
+
+  nginx:
+    image: nginx:latest
+    restart: always
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+    networks:
+      - dify-network
+    depends_on:
+      - api
+      - web

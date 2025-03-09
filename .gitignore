@@ -1,0 +1,50 @@
+# Node.js dependencies
+node_modules/
+
+# Python environments
+venv/
+env/
+openmanus_env/
+ENV/
+env.bak/
+venv.bak/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Large files and directories
+*.so
+*.dll
+*.dylib
+*.lib
+*.a
+*.o
+*.obj
+*.out
+*.exe
+*.bin
+*.dat
+*.model
+*.mp4
+*.avi
+*.mp3
+*.wav
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# OS specific
+.DS_Store
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# Build outputs
+/site/
+/dist/

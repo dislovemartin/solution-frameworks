@@ -1,0 +1,91 @@
+policies:
+- llms:
+  - api_base: https://integrate.api.nvidia.com
+    api_key: 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
+    model: meta/llama-3.1-70b-instruct
+    name: Brainstorming
+  - api_base: https://integrate.api.nvidia.com
+    api_key: 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
+    model: mistralai/mixtral-8x22b-instruct-v0.1
+    name: Chatbot
+  - api_base: https://integrate.api.nvidia.com
+    api_key: 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
+    model: meta/llama-3.1-8b-instruct
+    name: Classification
+  - api_base: https://integrate.api.nvidia.com
+    api_key: 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
+    model: meta/llama-3.1-70b-instruct
+    name: Closed QA
+  - api_base: https://integrate.api.nvidia.com
+    api_key: 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
+    model: deepseek-ai/deepseek-r1
+    name: Code Generation
+  - api_base: https://integrate.api.nvidia.com
+    api_key: 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
+    model: meta/llama-3.1-8b-instruct
+    name: Extraction
+  - api_base: https://integrate.api.nvidia.com
+    api_key: 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
+    model: meta/llama-3.1-70b-instruct
+    name: Open QA
+  - api_base: https://integrate.api.nvidia.com
+    api_key: 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
+    model: mistralai/mixtral-8x22b-instruct-v0.1
+    name: Other
+  - api_base: https://integrate.api.nvidia.com
+    api_key: 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
+    model: meta/llama-3.1-8b-instruct
+    name: Rewrite
+  - api_base: https://integrate.api.nvidia.com
+    api_key: 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
+    model: meta/llama-3.1-70b-instruct
+    name: Summarization
+  - api_base: https://integrate.api.nvidia.com
+    api_key: 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
+    model: mistralai/mixtral-8x22b-instruct-v0.1
+    name: Text Generation
+  - api_base: https://integrate.api.nvidia.com
+    api_key: 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
+    model: meta/llama-3.1-8b-instruct
+    name: Unknown
+  - api_base: http://localhost:8000
+    api_key: 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
+    model: qwen/qwen-2.5-7b-instruct
+    name: Qwen
+  name: task_router
+  url: http://router-server:8010/v2/models/task_router_ensemble/infer
+- llms:
+  - api_base: https://integrate.api.nvidia.com
+    api_key: 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
+    model: meta/llama-3.1-70b-instruct
+    name: Creativity
+  - api_base: https://integrate.api.nvidia.com
+    api_key: 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
+    model: deepseek-ai/deepseek-r1
+    name: Reasoning
+  - api_base: https://integrate.api.nvidia.com
+    api_key: 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
+    model: meta/llama-3.1-8b-instruct
+    name: Contextual-Knowledge
+  - api_base: https://integrate.api.nvidia.com
+    api_key: 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
+    model: meta/llama-3.1-70b-instruct
+    name: Few-Shot
+  - api_base: https://integrate.api.nvidia.com
+    api_key: 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
+    model: mistralai/mixtral-8x22b-instruct-v0.1
+    name: Domain-Knowledge
+  - api_base: https://integrate.api.nvidia.com
+    api_key: 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
+    model: meta/llama-3.1-8b-instruct
+    name: No-Label-Reason
+  - api_base: https://integrate.api.nvidia.com
+    api_key: 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
+    model: meta/llama-3.1-8b-instruct
+    name: Constraint
+  - api_base: http://localhost:8000
+    api_key: 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
+    model: qwen/qwen-2.5-7b-instruct
+    name: General-Purpose
+  name: complexity_router
+  url: http://router-server:8010/v2/models/complexity_router_ensemble/infer

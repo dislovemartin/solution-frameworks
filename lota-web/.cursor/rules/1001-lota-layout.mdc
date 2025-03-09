@@ -1,0 +1,72 @@
+---
+description: Apply when creating or modifying page layouts for the LOTA website to maintain consistent section structure
+globs: app/**/*.tsx components/layout*.tsx
+---
+
+# LOTA Website Layout Standards
+
+## Context
+- This rule applies to all page layouts and section components in the LOTA website
+- Ensures consistent section spacing, container usage, and responsive design
+- Maintains the visual identity of the LOTA brand across the site
+
+## Requirements
+
+### Page Structure
+- Use semantic `section` elements for major content blocks
+- Apply consistent vertical spacing with `py-24` class for standard sections
+- Use `container-wide` class for content containers
+- Follow established grid patterns with responsive column counts
+- Use proper heading hierarchy (h1 for page title, h2 for sections, h3 for subsections)
+
+### Section Patterns
+- Hero Section: Full-width with overlay text and background image
+- Content Section: Standard padded section with appropriate container
+- Alternate Sections: Alternate background colors (light/secondary) between sections
+- Card Grids: Consistent grid layouts for cards and list items
+
+### Responsive Layouts
+- Use mobile-first approach with responsive class variants
+- Standard grid patterns:
+  - 1 column on mobile
+  - 2 columns on medium screens (md:grid-cols-2)
+  - 3 columns on large screens (lg:grid-cols-3)
+- Maintain proper text hierarchy across breakpoints
+- Adjust spacing proportionally across breakpoints
+
+### Navigation & Footer
+- Consistent header implementation across pages
+- Standardized footer with proper sections and links
+- Implement breadcrumbs on nested pages
+
+## Examples
+
+<example>
+// Good section implementation
+<section className="py-24">
+  <div className="container-wide">
+    <div className="max-w-xl mb-16">
+      <h2 className="mb-6">Our Programs</h2>
+      <p className="text-lg">
+        Comprehensive development opportunities designed to nurture leadership skills, 
+        professional growth, and community engagement.
+      </p>
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {/* Cards go here */}
+    </div>
+  </div>
+</section>
+</example>
+
+<example type="invalid">
+// Poor section implementation
+<div>
+  <h2>Our Programs</h2>
+  <p>Program description</p>
+  <div>
+    {/* Cards without proper grid structure */}
+  </div>
+</div>
+</example>

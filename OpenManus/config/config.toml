@@ -1,0 +1,22 @@
+# Global LLM configuration
+[llm]
+model = "o3-mini"
+base_url = "https://api.openai.com/v1"
+api_key = "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"
+max_tokens = 120000
+temperature = 0.0
+
+# [llm] #GROQ:
+# api_type = "groq"
+# model = "qwen-qwq-32b" # Other options: "llama3-8b-8192", "mixtral-8x7b-32768", "gemma-7b-it", "llama-3.1-70b-versatile", "gemma2-9b-it"
+# base_url = "https://api.groq.com/openai/v1"
+# api_key = "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" # Get from https://console.groq.com/keys
+# max_tokens = 	16384
+# `temperature=0.6` and `top_p=0.95`
+
+# Optional configuration for specific LLM models
+[llm.vision]
+model = "claude-3-7-sonnet-latest"
+base_url = "https://api.anthropic.com/v1"
+api_key = "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"
+

@@ -1,0 +1,83 @@
+policies:
+- llms:
+  - api_base: https://api.openai.com/v1
+    api_key: your-openai-api-key
+    model: gpt-3.5-turbo
+    name: Brainstorming
+  - api_base: https://api.openai.com/v1
+    api_key: your-openai-api-key
+    model: gpt-3.5-turbo
+    name: Chatbot
+  - api_base: https://api.openai.com/v1
+    api_key: your-openai-api-key
+    model: gpt-3.5-turbo
+    name: Classification
+  - api_base: https://api.openai.com/v1
+    api_key: your-openai-api-key
+    model: gpt-4
+    name: Closed QA
+  - api_base: https://api.openai.com/v1
+    api_key: your-openai-api-key
+    model: gpt-4
+    name: Code Generation
+  - api_base: https://api.openai.com/v1
+    api_key: your-openai-api-key
+    model: gpt-3.5-turbo
+    name: Extraction
+  - api_base: https://api.openai.com/v1
+    api_key: your-openai-api-key
+    model: gpt-4
+    name: Open QA
+  - api_base: https://api.openai.com/v1
+    api_key: your-openai-api-key
+    model: gpt-3.5-turbo
+    name: Other
+  - api_base: https://api.openai.com/v1
+    api_key: your-openai-api-key
+    model: gpt-3.5-turbo
+    name: Rewrite
+  - api_base: https://api.openai.com/v1
+    api_key: your-openai-api-key
+    model: gpt-4
+    name: Summarization
+  - api_base: https://api.openai.com/v1
+    api_key: your-openai-api-key
+    model: gpt-3.5-turbo
+    name: Text Generation
+  - api_base: https://api.openai.com/v1
+    api_key: your-openai-api-key
+    model: gpt-3.5-turbo
+    name: Unknown
+  name: task_router
+  url: http://router-server:8000/v2/models/task_router_ensemble/infer
+- llms:
+  - api_base: https://api.openai.com/v1
+    api_key: your-openai-api-key
+    model: gpt-4
+    name: Creativity
+  - api_base: https://api.openai.com/v1
+    api_key: your-openai-api-key
+    model: gpt-4
+    name: Reasoning
+  - api_base: https://api.openai.com/v1
+    api_key: your-openai-api-key
+    model: gpt-3.5-turbo
+    name: Contextual-Knowledge
+  - api_base: https://api.openai.com/v1
+    api_key: your-openai-api-key
+    model: gpt-4
+    name: Few-Shot
+  - api_base: https://api.openai.com/v1
+    api_key: your-openai-api-key
+    model: gpt-4
+    name: Domain-Knowledge
+  - api_base: https://api.openai.com/v1
+    api_key: your-openai-api-key
+    model: gpt-3.5-turbo
+    name: No-Label-Reason
+  - api_base: https://api.openai.com/v1
+    api_key: your-openai-api-key
+    model: gpt-3.5-turbo
+    name: Constraint
+  name: complexity_router
+  url: http://router-server:8000/v2/models/complexity_router_ensemble/infer
